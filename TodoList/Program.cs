@@ -4,7 +4,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // builder.Services.AddSingleton<ITodoItemRepository, InMemoryTodoItemRepository>();
-builder.Services.AddDbContext<SQLServerWebContext>();
+builder.Services.AddDbContext<SQLServerWebContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<ITodoItemRepository, SQLServerTodoItemRepository<SQLServerWebContext>>();
 
 builder.Services.AddTransient<TodoListManager>();
