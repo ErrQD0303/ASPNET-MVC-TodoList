@@ -1,0 +1,14 @@
+@model Item
+
+@{
+    ViewData["Title"] = "Add";
+}
+
+<form asp-action="Add" method="post">
+    <div class="form-group">
+        <label for="Text">Text:</label>
+        <input id="Text" name="Text" type="text" class="form-control" value="" />
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="/" class="btn btn-primary">Cancel</a>
+</form>

@@ -1,0 +1,67 @@
+﻿@model TodoList.Models.TodoListViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">To Do</h1>
+    @if (Model.Items != null && Model.Items.Any())
+    {
+        <ul class="item-list">
+            @foreach (var item in Model.Items)
+            {
+                <li class="d-flex align-items-center justify-content-between" data-id="@item.Id">
+                    <div>
+                        <p>@item.Text</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <a class="btn btn-warning float-right" href="/Home/Update/@item.Id">Update</a>
+                        <form method="POST" class="inline float-right" action="/Home/Delete/@item.Id">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                        <div class="form-group form-check">
+                            @if (item.IsCompleted == true)
+                            {
+                                <input type="checkbox" class="form-check-input" name="IsCompleted" checked />
+                            }
+                            else
+                            {
+                                <input type="checkbox" class="form-check-input" name="IsCompleted" />
+                            }
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No items to display.</p>
+    }
+    <a @* asp-action="Add" *@ class="btn btn-success" href="/Home/Add">Add</a>
+</div>
+
+@section HomeIndexScript {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const parentUl = document.querySelector("ul.item-list");
+            parentUl?.addEventListener("click", function (e) {
+                if (e.target.type !== "checkbox") {
+                    return;
+                }
+                const parentli = e.target.closest("li");
+                const id = parentli.dataset.id;
+                const isCompleted = e.target.checked;
+
+                fetch(`/Home/MarkComplete/${id}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ isCompleted }),
+                });
+            });
+        });
+    </script>
+}
